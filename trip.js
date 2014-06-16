@@ -28,8 +28,9 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(restify.CORS());
 
-var PATH="/trips";
-server.get({path:PATH},getTrip);
+//var PATH="/trips";
+server.get("/trips",getTrip);
+server.get("/friends",getFriends);
 
 function getTrip (req,res,next) {
 	// body...
@@ -44,5 +45,20 @@ function getTrip (req,res,next) {
 			console.log("SUCCESS : "+result);
 	});
 	console.log(query.sql);
-	res.send(201);
+	res.send(200);
+}
+function getFriends (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.userId);
+	data.userId=req.params.userId;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('select * from friends where req_sent='+data.userId+' or req_rec='+data.userId+' and status=1',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
 }
