@@ -34,6 +34,7 @@ server.get("/friends",getFriends);
 server.get("/favourites",getFavourites);
 server.get("/hot",getHot);
 server.get("/profile",getProfile);
+server.del("/deleteProfile",deleteProfile);
 
 function getTrip (req,res,next) {
 	// body...
@@ -99,6 +100,42 @@ function getProfile (req,res,next) {
 	data.userId=req.params.userId;
 	res.setHeader('Access-Control-Origin','*');
 	query=connection.query('select userName, bioData, img from account where userId='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function deleteProfile (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.userId);
+	data.userId=req.params.userId;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('delete from account where userId='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	query=connection.query('delete from trip where createdBy='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	query=connection.query('delete from friends where req_rec='+data.userId+' or req_sent='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	query=connection.query('delete from favourites where userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else
