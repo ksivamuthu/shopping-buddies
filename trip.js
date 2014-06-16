@@ -39,7 +39,7 @@ server.put("/updateProfile",updateProfile);
 server.del("/deleteTrip",deleteTrip);
 server.put("/updateTrip",updateTrip);
 server.get("/venues",getVenues);
-server.get("attendingFriends",attendingFriends);
+server.get("/attendingFriends",attendingFriends);
 
 function getTrip (req,res,next) {
 	// body...
