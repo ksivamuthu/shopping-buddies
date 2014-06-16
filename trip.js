@@ -36,6 +36,10 @@ server.get("/hot",getHot);
 server.get("/profile",getProfile);
 server.del("/deleteProfile",deleteProfile);
 server.put("/updateProfile",updateProfile);
+server.del("/deleteTrip",deleteTrip);
+server.put("/updateTrip",updateTrip);
+server.get("/venues",getVenues);
+server.get("attendingFriends",attendingFriends);
 
 function getTrip (req,res,next) {
 	// body...
@@ -85,7 +89,7 @@ function getFavourites (req,res,next) {
 function getHot (req,res,next) {
 	// body...
 		res.setHeader('Access-Control-Origin','*');
-		query=connection.query('select occasion, getcount(occasion) c from trip group by occasion order by c desc limit 10;',function(err,result){
+		query=connection.query('select occasion, count(occasion) c from trip group by occasion order by c desc limit 10;',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else
@@ -115,13 +119,8 @@ function deleteProfile (req,res,next) {
 	console.log(req.params.userId);
 	data.userId=req.params.userId;
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('delete from account where userId='+data.userId,function(err,result){
-		if(err)
-			console.log("ERROR : "+err);
-		else
-			console.log("SUCCESS : "+result);
-	});
-	console.log(query.sql);
+	
+	
 	query=connection.query('delete from trip where createdBy='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
@@ -142,8 +141,23 @@ function deleteProfile (req,res,next) {
 		else
 			console.log("SUCCESS : "+result);
 	});
+	query=connection.query('delete from tripattendees where invitees='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	query=connection.query('delete from account where userId='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	
 	console.log(query.sql);
 	res.send(200);
+
 }
 function updateProfile (req,res,next) {
 	// body...
@@ -155,6 +169,73 @@ function updateProfile (req,res,next) {
 	data.img=req.params.img;
 	res.setHeader('Access-Control-Origin','*');
 	query=connection.query('update account set userName='+data.userName+', bioData='+data.bioData+', img='+data.img+' where userId='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function deleteTrip (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.tripId);
+	data.tripId=req.params.tripId;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('delete from trip where tripId='+data.tripId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function updateTrip (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.userId);
+	data.createdBy=req.params.userId;
+	data.tripId=req.params.tripId;
+	data.tripName=req.params.tripName;
+	data.occasion=req.params.occasion;
+	data.date=req.params.date;
+	data.duration=req.params.duration;
+	data.meetup=req.params.meetup;
+	data.img=req.params.img;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('update trip set tripName='+data.tripName+', occasion='+data.occasion+', date='+data.date+', duration='+data.duration+', meetup='+data.meetup+', image='+data.img+' where tripId='+data.tripId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function getVenues (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.tripId);
+	data.tripId=req.params.tripId;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('select * from tripvenues where tripId='+data.tripId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function attendingFriends (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.tripId);
+	data.tripId=req.params.tripId;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('select * from tripattendees where tripId='+data.tripId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else
