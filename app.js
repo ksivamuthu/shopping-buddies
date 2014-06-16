@@ -29,7 +29,7 @@ server.use(restify.bodyParser());
 server.use(restify.CORS());
 
 var PATH="/trips";
-server.post({path:PATH},getTrip);
+server.get({path:PATH},getTrip);
 
 function getTrip (req,res,next) {
 	// body...
