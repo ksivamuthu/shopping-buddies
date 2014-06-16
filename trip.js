@@ -35,6 +35,7 @@ server.get("/favourites",getFavourites);
 server.get("/hot",getHot);
 server.get("/profile",getProfile);
 server.del("/deleteProfile",deleteProfile);
+server.put("/updateProfile",updateProfile);
 
 function getTrip (req,res,next) {
 	// body...
@@ -136,6 +137,24 @@ function deleteProfile (req,res,next) {
 	});
 	console.log(query.sql);
 	query=connection.query('delete from favourites where userId='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function updateProfile (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.userId);
+	data.userId=req.params.userId;
+	data.userName=req.params.userName;
+	data.bioData=req.params.bioData;
+	data.img=req.params.img;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('update account set userName='+data.userName+', bioData='+data.bioData+', img='+data.img+' where userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else
