@@ -33,6 +33,8 @@ server.get("/trips",getTrip);
 server.get("/friends",getFriends);
 server.get("/favourites",getFavourites);
 server.get("/hot",getHot);
+server.get("/profile",getProfile);
+
 function getTrip (req,res,next) {
 	// body...
 	var data={};
@@ -80,7 +82,23 @@ function getFavourites (req,res,next) {
 }
 function getHot (req,res,next) {
 	// body...
-		query=connection.query('select occasion, count(occasion) c from trip group by occasion order by c desc limit 10;',function(err,result){
+		res.setHeader('Access-Control-Origin','*');
+		query=connection.query('select occasion, getcount(occasion) c from trip group by occasion order by c desc limit 10;',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function getProfile (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.userId);
+	data.userId=req.params.userId;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('select userName, bioData, img from account where userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else
