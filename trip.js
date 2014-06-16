@@ -31,7 +31,8 @@ server.use(restify.CORS());
 //var PATH="/trips";
 server.get("/trips",getTrip);
 server.get("/friends",getFriends);
-
+server.get("/favourites",getFavourites);
+server.get("/hot",getHot);
 function getTrip (req,res,next) {
 	// body...
 	var data={};
@@ -54,6 +55,32 @@ function getFriends (req,res,next) {
 	data.userId=req.params.userId;
 	res.setHeader('Access-Control-Origin','*');
 	query=connection.query('select * from friends where req_sent='+data.userId+' or req_rec='+data.userId+' and status=1',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function getFavourites (req,res,next) {
+	// body...
+	var data={};
+	console.log(req.params.userId);
+	data.userId=req.params.userId;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('select * from favourites where userId='+data.userId,function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else
+			console.log("SUCCESS : "+result);
+	});
+	console.log(query.sql);
+	res.send(200);
+}
+function getHot (req,res,next) {
+	// body...
+		query=connection.query('select occasion, count(occasion) c from trip group by occasion order by c desc limit 10;',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else
