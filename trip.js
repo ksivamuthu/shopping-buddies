@@ -195,7 +195,7 @@ function deleteTrip (req,res,next) {
 function updateTrip (req,res,next) {
 	// body...
 	var data={};
-	console.log(req.params.userId);
+	console.log(req.params.tripId);
 	data.createdBy=req.params.userId;
 	data.tripId=req.params.tripId;
 	data.tripName=req.params.tripName;
