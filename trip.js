@@ -43,6 +43,7 @@ server.get("/attendingFriends",attendingFriends);
 server.post("/createAccount",createAccount);
 server.post("/createTrip",createTrip);
 server.post("/addFriend",addFriend);
+server.put("/acceptFriend",acceptFriend);
 
 function getTrip (req,res,next) {
 	// body...
@@ -332,6 +333,23 @@ function addFriend (req,res,next) {
 	data.req_rec=req.params.req_rec;
 	res.setHeader('Access-Control-Origin','*');
 	query=connection.query('insert into friends (req_sent,req_rec,status) values ('+data.req_sent+','+data.req_rec+',0);',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	
+}
+function acceptFriend (req,res,next) {
+	// body...
+	var data={};
+	data.req_sent=req.params.req_sent;
+	data.req_rec=req.params.req_rec;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('update friends set status=1;',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
