@@ -39,7 +39,10 @@ server.put("/updateProfile",updateProfile);
 server.del("/deleteTrip",deleteTrip);
 server.put("/updateTrip",updateTrip);
 server.get("/venues",getVenues);
-server.get("attendingFriends",attendingFriends);
+server.get("/attendingFriends",attendingFriends);
+server.post("/createAccount",createAccount);
+server.post("/createTrip",createTrip);
+server.post("/addFriend",addFriend);
 
 function getTrip (req,res,next) {
 	// body...
@@ -50,11 +53,13 @@ function getTrip (req,res,next) {
 	query=connection.query('select * from trip where createdBy='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
+	
 }
 function getFriends (req,res,next) {
 	// body...
@@ -65,11 +70,13 @@ function getFriends (req,res,next) {
 	query=connection.query('select * from friends where req_sent='+data.userId+' or req_rec='+data.userId+' and status=1',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
+	
 }
 function getFavourites (req,res,next) {
 	// body...
@@ -80,11 +87,13 @@ function getFavourites (req,res,next) {
 	query=connection.query('select * from favourites where userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
+
 }
 function getHot (req,res,next) {
 	// body...
@@ -92,11 +101,13 @@ function getHot (req,res,next) {
 		query=connection.query('select occasion, count(occasion) c from trip group by occasion order by c desc limit 10;',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
+	
 }
 function getProfile (req,res,next) {
 	// body...
@@ -107,11 +118,13 @@ function getProfile (req,res,next) {
 	query=connection.query('select userName, bioData, img from account where userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
+	
 }
 function deleteProfile (req,res,next) {
 	// body...
@@ -124,39 +137,49 @@ function deleteProfile (req,res,next) {
 	query=connection.query('delete from trip where createdBy='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
 	query=connection.query('delete from friends where req_rec='+data.userId+' or req_sent='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
 	query=connection.query('delete from favourites where userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
 	query=connection.query('delete from tripattendees where invitees='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
 	console.log(query.sql);
 	query=connection.query('delete from account where userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	
-	console.log(query.sql);
-	res.send(200);
 
 }
 function updateProfile (req,res,next) {
@@ -171,11 +194,12 @@ function updateProfile (req,res,next) {
 	query=connection.query('update account set userName='+data.userName+', bioData='+data.bioData+', img='+data.img+' where userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
 }
 function deleteTrip (req,res,next) {
 	// body...
@@ -186,16 +210,17 @@ function deleteTrip (req,res,next) {
 	query=connection.query('delete from trip where tripId='+data.tripId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
 }
 function updateTrip (req,res,next) {
 	// body...
 	var data={};
-	console.log(req.params.userId);
+	console.log(req.params.tripId);
 	data.createdBy=req.params.userId;
 	data.tripId=req.params.tripId;
 	data.tripName=req.params.tripName;
@@ -208,11 +233,13 @@ function updateTrip (req,res,next) {
 	query=connection.query('update trip set tripName='+data.tripName+', occasion='+data.occasion+', date='+data.date+', duration='+data.duration+', meetup='+data.meetup+', image='+data.img+' where tripId='+data.tripId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+
 	});
-	console.log(query.sql);
-	res.send(200);
 }
 function getVenues (req,res,next) {
 	// body...
@@ -223,11 +250,12 @@ function getVenues (req,res,next) {
 	query=connection.query('select * from tripvenues where tripId='+data.tripId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
 }
 function attendingFriends (req,res,next) {
 	// body...
@@ -238,9 +266,79 @@ function attendingFriends (req,res,next) {
 	query=connection.query('select * from tripattendees where tripId='+data.tripId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
-		else
+		else{
 			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
 	});
-	console.log(query.sql);
-	res.send(200);
+	
+}
+function createAccount (req,res,next) {
+	// body...
+	var data={};
+	data.userId=req.params.userId;
+	data.userName=req.params.userName;
+	data.userToken=req.params.userToken;
+	data.bioData=req.params.bioData;
+	data.img=req.params.img;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('insert into account (userId,userToken,userName,bioData) values ('+data.userId+','+data.userToken+','+data.userName+','+data.bioData+');',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	
+}
+function createTrip (req,res,next) {
+	// body...
+	var data={};
+	data.tripName=req.params.tripName;
+	data.userId=req.params.userId;
+	data.occasion=req.params.occasion;
+	data.date=req.params.date;
+	data.duration=req.params.duration;
+	data.meetup=req.params.meetup;
+	data.img=req.params.img;
+	res.setHeader('Access-Control-Origin','*');
+	var date=new Date();
+
+	var yyyy=date.getFullYear().toString();
+	var mm=(date.getMonth()+1).toString();
+	var dd=date.getDate().toString();
+	var mmChars = mm.split('');
+	var ddChars = dd.split('');
+	var datestring = yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
+	
+	query=connection.query('insert into trip (tripname,createdBy,createdDate,occasion,date,duration,meetup,image) values ('+data.tripName+','+data.userId+',"'+datestring+'",'+data.occasion+','+data.date+','+data.duration+','+data.meetup+','+data.img+');',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	
+}
+function addFriend (req,res,next) {
+	// body...
+	var data={};
+	data.req_sent=req.params.req_sent;
+	data.req_rec=req.params.req_rec;
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('insert into friends (req_sent,req_rec,status) values ('+data.req_sent+','+data.req_rec+',0);',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	
 }
