@@ -53,6 +53,7 @@ function uploadFile (req,res,next){
 	var tmp_path = req.files.thumbnail.path;
     console.log(tmp_path);
     var path='./images/'+data.userId+'/';
+    var target_path = './images/'+data.userId+'/' + req.files.thumbnail.name;
     fs.stat(path,function(e){
     	console.log(e);
     	if(e)
@@ -64,7 +65,7 @@ function uploadFile (req,res,next){
    			})
    		}
    		 // set where the file should actually exists - in this case it is in the "images" directory
-    var target_path = './images/'+data.userId+'/' + req.files.thumbnail.name;
+   
     console.log(target_path);
     // move the file from the temporary location to the intended location
     fs.rename(tmp_path, target_path, function(err) {
@@ -72,30 +73,23 @@ function uploadFile (req,res,next){
         // delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
         fs.unlink(tmp_path, function() {
             if (err) throw err;
-            res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
+            //res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
         });
     });
     	
     })
+    var imgId;
+	query1=connection.query('insert into images (imgSrc) values ("'+target_path+'");',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query1.sql);
+			//res.send(200,result);
+		}
+	});
    
 }
-/*server.post('/file-upload', function(req, res) {
-    // get the temporary location of the file
-    var tmp_path = req.files.thumbnail.path;
-    console.log(tmp_path);
-    // set where the file should actually exists - in this case it is in the "images" directory
-    var target_path = './images/' + req.files.thumbnail.name;
-    console.log(target_path);
-    // move the file from the temporary location to the intended location
-    fs.rename(tmp_path, target_path, function(err) {
-        if (err) throw err;
-        // delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
-        fs.unlink(tmp_path, function() {
-            if (err) throw err;
-            res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
-        });
-    });
-});*/
 
 
 function getTrip (req,res,next) {
@@ -398,8 +392,45 @@ function createAccount (req,res,next) {
 	data.userToken=req.params.userToken;
 	data.bioData=req.params.bioData;
 	data.img=req.params.img;
+	var data={};
+	console.log(req.params.userId);
+	data.userId=req.params.userId;
+	var tmp_path = req.files.thumbnail.path;
+    console.log(tmp_path);
+    var path='./images/'+data.userId+'/';
+    fs.stat(path,function(e){
+    	console.log(e);
+    	if(e)
+   		{
+   			fs.mkdir(path,0777,function(err,dirPath){
+   				if(err)
+   					console.log(err);
+   			})
+   		}
+    var target_path = './images/'+data.userId+'/' + req.files.thumbnail.name;
+    console.log(target_path);
+    fs.rename(tmp_path, target_path, function(err) {
+        if (err) throw err;
+        fs.unlink(tmp_path, function() {
+            if (err) throw err;
+            //res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
+        });
+    });
+    	
+    })
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('insert into account (userId,userToken,userName,bioData) values ('+data.userId+','+data.userToken+','+data.userName+','+data.bioData+');',function(err,result){
+	var imgId;
+	query1=connection.query('insert into images (imgSrc) values ('+target_path+');',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query1.sql);
+			//res.send(200,result);
+		}
+	});
+
+	query2=connection.query('insert into account (userId,userToken,userName,bioData,imgId) values ('+data.userId+','+data.userToken+','+data.userName+','+data.bioData+',last_insert_id());',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -408,7 +439,7 @@ function createAccount (req,res,next) {
 			res.send(200,result);
 		}
 	});
-	
+
 }
 function createTrip (req,res,next) {
 	// body...
