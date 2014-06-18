@@ -40,12 +40,15 @@ server.del("/deleteTrip",deleteTrip);
 server.put("/updateTrip",updateTrip);
 server.get("/venues",getVenues);
 server.get("/attendingFriends",attendingFriends);
+<<<<<<< HEAD
 server.post("/createAccount",createAccount);
 server.post("/createTrip",createTrip);
 server.post("/addFriend",addFriend);
 server.put("/acceptFriend",acceptFriend);
 server.post("/addFavourites",addFavourites);
 
+=======
+>>>>>>> a23c072ba459c442d6249170de5571de66788a28
 
 function getTrip (req,res,next) {
 	// body...
@@ -394,6 +397,7 @@ function createAccount (req,res,next) {
 			console.log(query1.sql);
 		}
 	});
+<<<<<<< HEAD
 
 	query2=connection.query('insert into account (userId,userToken,userName,bioData,imgId) values ('+data.userId+','+data.userToken+','+data.userName+','+data.bioData+',last_insert_id());',function(err,result){
 		if(err)
@@ -519,4 +523,8 @@ function addFavourites (req,res,next) {
 		}
 	});
 	
+=======
+	console.log(query.sql);
+	res.send(200);
+>>>>>>> a23c072ba459c442d6249170de5571de66788a28
 }

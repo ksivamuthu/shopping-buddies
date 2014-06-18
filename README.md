@@ -1,4 +1,1 @@
-shopping-buddies
-================
-
 Shopping Buddies
