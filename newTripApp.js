@@ -1,1 +1,0 @@
-var newTrip=angular.module("newTrip",[]);

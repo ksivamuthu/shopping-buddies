@@ -44,52 +44,7 @@ server.post("/createAccount",createAccount);
 server.post("/createTrip",createTrip);
 server.post("/addFriend",addFriend);
 server.put("/acceptFriend",acceptFriend);
-server.post("/uploadFile",uploadFile);
-function uploadFile (req,res,next){
-	//body...
-	var data={};
-	console.log(req.params.userId);
-	data.userId=req.params.userId;
-	var tmp_path = req.files.thumbnail.path;
-    console.log(tmp_path);
-    var path='./images/'+data.userId+'/';
-    var target_path = './images/'+data.userId+'/' + req.files.thumbnail.name;
-    fs.stat(path,function(e){
-    	console.log(e);
-    	if(e)
-   		{
-   			fs.mkdir(path,0777,function(err,dirPath){
-   				if(err)
-   					console.log(err);
-   	//			console.log(dirPath);
-   			})
-   		}
-   		 // set where the file should actually exists - in this case it is in the "images" directory
-   
-    console.log(target_path);
-    // move the file from the temporary location to the intended location
-    fs.rename(tmp_path, target_path, function(err) {
-        if (err) throw err;
-        // delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
-        fs.unlink(tmp_path, function() {
-            if (err) throw err;
-            //res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
-        });
-    });
-    	
-    })
-    var imgId;
-	query1=connection.query('insert into images (imgSrc) values ("'+target_path+'");',function(err,result){
-		if(err)
-			console.log("ERROR : "+err);
-		else{
-			console.log("SUCCESS : "+result);
-			console.log(query1.sql);
-			//res.send(200,result);
-		}
-	});
-   
-}
+server.post("/addFavourites",addFavourites);
 
 
 function getTrip (req,res,next) {
@@ -132,7 +87,7 @@ function getFavourites (req,res,next) {
 	console.log(req.params.userId);
 	data.userId=req.params.userId;
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('select * from favourites where userId='+data.userId,function(err,result){
+	query=connection.query('select a.latitude, a.longitude, a.description, b.imgSrc from favourites a, images b where a.imgId=b.imgId and userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -163,7 +118,7 @@ function getProfile (req,res,next) {
 	console.log(req.params.userId);
 	data.userId=req.params.userId;
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('select userName, bioData, img from account where userId='+data.userId,function(err,result){
+	query=connection.query('select a.userName, a.bioData, b.imgSrc from account a, images b where a.imgId=b.imgId and userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -180,97 +135,82 @@ function deleteProfile (req,res,next) {
 	console.log(req.params.userId);
 	data.userId=req.params.userId;
 	res.setHeader('Access-Control-Origin','*');
-	
-	
-	
+			
 	query1=connection.query('delete from friends where req_rec='+data.userId+' or req_sent='+data.userId,function(err,result){
-
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query1.sql);
 		}
 		else{
 			console.log("SUCCESS : "+result);
-		//	console.log(query.sql);
 			res.send(200,result);
 		}
 	});
-	query2=connection.query('delete from favourites where userId='+data.userId,function(err,result){
-		//console.log(query.sql);
+	query2=connection.query('delete a, b from favourites a inner join images b on a.imgId=b.imgId and a.userId='+data.userId,function(err,result){
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query2.sql);
 		}
 		else{
 			console.log("SUCCESS : "+result);
-		//	console.log(query.sql);
 			res.send(200,result);
 		}
 	});
 	query3=connection.query('delete tripAttendees from tripAttendees , trip where trip.tripId=tripAttendees.tripId and trip.createdBy='+data.userId+';',function(err,result){
-		//console.log(query.sql);
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query3.sql);
 		}
 		else{
 			console.log("SUCCESS : "+result);
-		//	console.log(query.sql);
 			res.send(200,result);
 		}
 	});
 	query7=connection.query('delete tripVenues from tripVenues , trip where trip.tripId=tripVenues.tripId and trip.createdBy='+data.userId+';',function(err,result){
-		//console.log(query.sql);
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query3.sql);
 		}
 		else{
 			console.log("SUCCESS : "+result);
-		//	console.log(query.sql);
 			res.send(200,result);
 		}
 	});
 
 	query6=connection.query('delete from tripAttendees where invitees='+data.userId+';',function(err,result){
-		//console.log(query.sql);
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query3.sql);
 		}
 		else{
 			console.log("SUCCESS : "+result);
-		//	console.log(query.sql);
 			res.send(200,result);
 		}
 	});
 
 	query4=connection.query('delete from trip where createdBy='+data.userId,function(err,result){
-		//console.log(query.sql);
 		if(err){
 		console.log("4"+query4.sql);
 			console.log("ERROR : "+err);
 		}
 		else{
 			console.log("SUCCESS : "+result);
-		//	console.log(query.sql);
 			res.send(200,result);
 		}
 	});
-	query5=connection.query('delete from account where userId='+data.userId,function(err,result){
-		//console.log(query.sql);
+	query5=connection.query('delete a, b from account a inner join images b where a.imgId=b.imgId and userId='+data.userId,function(err,result){
 		if(err){
 			console.log("5"+query5.sql);
 			console.log("ERROR : "+err);
 		}
 		else{
 			console.log("SUCCESS : "+result);
-		//	console.log(query.sql);
 			res.send(200,result);
 		}
 	});
 
 }
+
 function updateProfile (req,res,next) {
 	// body...
 	var data={};
@@ -280,7 +220,31 @@ function updateProfile (req,res,next) {
 	data.bioData=req.params.bioData;
 	data.img=req.params.img;
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('update account set userName='+data.userName+', bioData='+data.bioData+', img='+data.img+' where userId='+data.userId,function(err,result){
+	var tmp_path = req.files.thumbnail.path;
+    console.log(tmp_path);
+    var path='./images/'+data.userId+'/';
+    var target_path = './images/'+data.userId+'/' + req.files.thumbnail.name;
+    fs.stat(path,function(e){
+    	console.log(e);
+    	if(e)
+   		{
+   			fs.mkdir(path,0777,function(err,dirPath){
+   				if(err)
+   					console.log(err);
+   			})
+   		}
+    
+    console.log(target_path);
+    fs.rename(tmp_path, target_path, function(err) {
+        if (err) throw err;
+        fs.unlink(tmp_path, function() {
+            if (err) throw err;
+        });
+    });
+    	
+    })
+	res.setHeader('Access-Control-Origin','*');
+	query=connection.query('update account left join images on account.imgId=images.imgId set account.userName='+data.userName+', account.bioData='+data.bioData+', images.imgSrc='+target_path+' where account.userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -290,6 +254,7 @@ function updateProfile (req,res,next) {
 		}
 	});
 }
+
 function deleteTrip (req,res,next) {
 	// body...
 	var data={};
@@ -398,6 +363,7 @@ function createAccount (req,res,next) {
 	var tmp_path = req.files.thumbnail.path;
     console.log(tmp_path);
     var path='./images/'+data.userId+'/';
+    var target_path = './images/'+data.userId+'/' + req.files.thumbnail.name;
     fs.stat(path,function(e){
     	console.log(e);
     	if(e)
@@ -407,7 +373,7 @@ function createAccount (req,res,next) {
    					console.log(err);
    			})
    		}
-    var target_path = './images/'+data.userId+'/' + req.files.thumbnail.name;
+    
     console.log(target_path);
     fs.rename(tmp_path, target_path, function(err) {
         if (err) throw err;
@@ -426,7 +392,6 @@ function createAccount (req,res,next) {
 		else{
 			console.log("SUCCESS : "+result);
 			console.log(query1.sql);
-			//res.send(200,result);
 		}
 	});
 
@@ -500,6 +465,56 @@ function acceptFriend (req,res,next) {
 		else{
 			console.log("SUCCESS : "+result);
 			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	
+}
+function addFavourites (req,res,next) {
+	// body...
+	var data={};
+	data.userId=req.params.userId;
+	data.latitude=req.params.latitude;
+	data.longitude=req.params.longitude;
+	data.description=req.params.description;
+	var tmp_path = req.files.thumbnail.path;
+    console.log(tmp_path);
+    var path='./images/'+data.userId+'/';
+    var target_path = './images/'+data.userId+'/' + req.files.thumbnail.name;
+    fs.stat(path,function(e){
+    	console.log(e);
+    	if(e)
+   		{
+   			fs.mkdir(path,0777,function(err,dirPath){
+   				if(err)
+   					console.log(err);
+   			})
+   		}
+    
+    console.log(target_path);
+    fs.rename(tmp_path, target_path, function(err) {
+        if (err) throw err;
+        fs.unlink(tmp_path, function() {
+            if (err) throw err;
+        });
+    });
+    	
+    })
+	res.setHeader('Access-Control-Origin','*');
+	query1=connection.query('insert into images (imgSrc) values ('+target_path+');',function(err,result){
+		console.log(query1.sql);
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+		}
+	});
+	query=connection.query('insert into favourites (userId,latitude,longitude,description,imgId) values ('+data.userId+','+data.latitude+','+data.longitude+','+data.description+',last_insert_id());',function(err,result){
+		console.log(query.sql);
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);			
 			res.send(200,result);
 		}
 	});
