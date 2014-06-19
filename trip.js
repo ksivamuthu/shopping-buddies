@@ -367,6 +367,7 @@ function updateTrip (req,res,next) {
 	data.date=req.params.date;
 	data.duration=req.params.duration;
 	data.meetup=req.params.meetup;
+	data.friends=req.params.friends;
 	res.setHeader('Access-Control-Origin','*');
 	query=connection.query('update trip set tripName="'+data.tripName+'", occasion="'+data.occasion+'", date="'+data.date+'", duration="'+data.duration+'", meetup="'+data.meetup+'" where tripId='+data.tripId,function(err,result){
 		if(err)
@@ -378,6 +379,20 @@ function updateTrip (req,res,next) {
 		}
 
 	});
+	var i=0;
+	while(data.friends[i])
+	{
+	query=connection.query('insert into tripAttendees (tripId,invitees,status) select '+data.tripId+', '+data.friends[i]+' ,"No" from dual where not exists (select invitees from tripattendees where tripId='+data.tripId+' and invitees='+data.friends[i]+');',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	i=i+1;
+	}
 }
 function getVenues (req,res,next) {
 	// body...
@@ -492,6 +507,7 @@ function createTrip (req,res,next) {
 	data.date=req.params.date;
 	data.duration=req.params.duration;
 	data.meetup=req.params.meetup;
+	data.friends=req.params.friends;
 	res.setHeader('Access-Control-Origin','*');
 	var date=new Date();
 
@@ -511,7 +527,21 @@ function createTrip (req,res,next) {
 			res.send(200,result);
 		}
 	});
-	
+	console.log(data.friends);
+	var i=0;
+	while(data.friends[i])
+	{
+	query=connection.query('insert into tripAttendees (tripId,invitees,status) values (last_insert_id(),'+data.friends[i]+',"No");',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	i=i+1;
+	}
 }
 function addFriend (req,res,next) {
 	// body...
