@@ -12,7 +12,17 @@ var connection=mysql.createConnection({
 	user	: "root",
 	password: "Tra@2014",
 	database: "sbtry",    
+	multipleStatements : true
 });
+/*var mysql = require('mysql');
+
+var connection = mysql.createConnection({
+host :  "nodejs-shoppingbuddies.rhcloud.com",
+user : 	"adminSt5sHZB",
+pass : 	"k_RyfcHqwsdC",
+port : 	3306,
+database : 'shoppingbuddies'
+});*/
 connection.connect(function(err){
 	if(err)
 		console.log("ERROR : "+err);
@@ -29,22 +39,30 @@ server.use(restify.bodyParser());
 server.use(restify.CORS());
 
 //var PATH="/trips";
-server.get("/trips",getTrip);
-server.get("/friends",getFriends);
-server.get("/favourites",getFavourites);
 server.get("/hot",getHot);
+
+server.get("/favourites",getFavourites);
+server.post("/addFavourites",addFavourites);
+
+server.post("/createAccount",createAccount);
 server.get("/profile",getProfile);
 server.del("/deleteProfile",deleteProfile);
 server.put("/updateProfile",updateProfile);
-server.del("/deleteTrip",deleteTrip);
+
+server.post("/createTrip",createTrip);
+server.get("/trips",getTrip);
 server.put("/updateTrip",updateTrip);
+server.del("/deleteTrip",deleteTrip);
+
 server.get("/venues",getVenues);
 server.get("/attendingFriends",attendingFriends);
-server.post("/createAccount",createAccount);
-server.post("/createTrip",createTrip);
+
 server.post("/addFriend",addFriend);
 server.put("/acceptFriend",acceptFriend);
-server.post("/addFavourites",addFavourites);
+server.get("/friends",getFriends);
+
+//server.put("/updateProfilePic",updateProfilePic);
+//server.post("/uploadProfilePic",uploadProfilePic);
 
 
 function getTrip (req,res,next) {
@@ -87,7 +105,7 @@ function getFavourites (req,res,next) {
 	console.log(req.params.userId);
 	data.userId=req.params.userId;
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('select a.latitude, a.longitude, a.description, b.imgSrc from favourites a, images b where a.imgId=b.imgId and userId='+data.userId,function(err,result){
+	query=connection.query('select a.latitude, a.longitude, a.description, b.imgSrc from favourites a left join images b on a.imgId=b.imgId where a.userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -118,7 +136,7 @@ function getProfile (req,res,next) {
 	console.log(req.params.userId);
 	data.userId=req.params.userId;
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('select a.userName, a.bioData, b.imgSrc from account a, images b where a.imgId=b.imgId and userId='+data.userId,function(err,result){
+	query=connection.query('select a.userName, a.bioData, b.imgSrc from account a left join images b on a.imgId=b.imgId where a.userId='+data.userId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -146,7 +164,7 @@ function deleteProfile (req,res,next) {
 			res.send(200,result);
 		}
 	});
-	query2=connection.query('delete a, b from favourites a inner join images b on a.imgId=b.imgId and a.userId='+data.userId,function(err,result){
+	query2=connection.query('delete a, b from favourites a left join images b on a.imgId=b.imgId where a.userId='+data.userId,function(err,result){
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query2.sql);
@@ -198,7 +216,7 @@ function deleteProfile (req,res,next) {
 			res.send(200,result);
 		}
 	});
-	query5=connection.query('delete a, b from account a inner join images b where a.imgId=b.imgId and userId='+data.userId,function(err,result){
+	query5=connection.query('delete a, b from account a left join images b on a.imgId=b.imgId where userId='+data.userId,function(err,result){
 		if(err){
 			console.log("5"+query5.sql);
 			console.log("ERROR : "+err);
@@ -208,6 +226,24 @@ function deleteProfile (req,res,next) {
 			res.send(200,result);
 		}
 	});
+	//Delete picture folder
+	var path='./images/'+data.userId+'/';
+	var deleteFolderRecursive = function(path) {
+		console.log(path);
+ 	 if( fs.existsSync(path) ) {
+    	fs.readdirSync(path).forEach(function(file,index){
+      	var curPath = path + "/" + file;
+      	if(fs.lstatSync(curPath).isDirectory()) {// recurse
+        	deleteFolderRecursive(curPath);
+      	} else { // delete file
+        	fs.unlinkSync(curPath);
+      	}
+    	});
+    	fs.rmdirSync(path);
+  	}
+	};
+
+deleteFolderRecursive(path);
 
 }
 
@@ -215,11 +251,13 @@ function updateProfile (req,res,next) {
 	// body...
 	var data={};
 	console.log(req.params.userId);
+
 	data.userId=req.params.userId;
 	data.userName=req.params.userName;
 	data.bioData=req.params.bioData;
-	data.img=req.params.img;
+
 	res.setHeader('Access-Control-Origin','*');
+
 	var tmp_path = req.files.thumbnail.path;
     console.log(tmp_path);
     var path='./images/'+data.userId+'/';
@@ -243,18 +281,43 @@ function updateProfile (req,res,next) {
     });
     	
     })
+	var flag=0;
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('update account left join images on account.imgId=images.imgId set account.userName='+data.userName+', account.bioData='+data.bioData+', images.imgSrc='+target_path+' where account.userId='+data.userId,function(err,result){
+	/*query1=connection.query('update account left join images on account.imgId=images.imgId set account.userName="'+data.userName+'", account.bioData="'+data.bioData+'", images.imgSrc="'+target_path+'" where account.userId='+data.userId+' and account.imgId is not null;',function(err,result){
+	console.log(query1.sql);
 		if(err)
 			console.log("ERROR : "+err);
 		else{
 			console.log("SUCCESS : "+result);
-			console.log(query.sql);
+			console.log(query1.sql);
+			res.send(200,result);
+		}
+		flag=1;
+		console.log("TTTTTT : "+target_path);
+	});
+	if(flag==0){
+	query2=connection.query('insert into images (imgSrc) values ("'+target_path+'") ; update account set imgId=last_insert_id(), userName="'+data.userName+'", bioData="'+data.bioData+'" where userId='+data.userId,function(err,result){
+		console.log(query2.sql);
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query5.sql);
+			res.send(200,result);
+		}
+	});
+}*/
+query2=connection.query('call updateProfile2('+data.userId+',"'+data.userName+'","'+data.bioData+'","'+target_path+'")',function(err,result){
+		console.log(query2.sql);
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query2.sql);
 			res.send(200,result);
 		}
 	});
 }
-
 function deleteTrip (req,res,next) {
 	// body...
 	var data={};
@@ -305,7 +368,7 @@ function updateTrip (req,res,next) {
 	data.duration=req.params.duration;
 	data.meetup=req.params.meetup;
 	res.setHeader('Access-Control-Origin','*');
-	query=connection.query('update trip set tripName='+data.tripName+', occasion='+data.occasion+', date='+data.date+', duration='+data.duration+', meetup='+data.meetup+' where tripId='+data.tripId,function(err,result){
+	query=connection.query('update trip set tripName="'+data.tripName+'", occasion="'+data.occasion+'", date="'+data.date+'", duration="'+data.duration+'", meetup="'+data.meetup+'" where tripId='+data.tripId,function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -351,15 +414,16 @@ function attendingFriends (req,res,next) {
 }
 function createAccount (req,res,next) {
 	// body...
+	console.log("createAccount");
 	var data={};
 	data.userId=req.params.userId;
 	data.userName=req.params.userName;
 	data.userToken=req.params.userToken;
 	data.bioData=req.params.bioData;
-	data.img=req.params.img;
-	var data={};
+	//data.img=req.params.img;
+	//var data={};
 	console.log(req.params.userId);
-	data.userId=req.params.userId;
+	//data.userId=req.params.userId;
 	var tmp_path = req.files.thumbnail.path;
     console.log(tmp_path);
     var path='./images/'+data.userId+'/';
@@ -370,7 +434,7 @@ function createAccount (req,res,next) {
    		{
    			fs.mkdir(path,0777,function(err,dirPath){
    				if(err)
-   					console.log(err);
+   					console.log("MAKING NEW FORLDER ERROR" +err);
    			})
    		}
     
@@ -386,7 +450,8 @@ function createAccount (req,res,next) {
     })
 	res.setHeader('Access-Control-Origin','*');
 	var imgId;
-	query1=connection.query('insert into images (imgSrc) values ('+target_path+');',function(err,result){
+	/*query1=connection.query('insert into images (imgSrc) values ("'+target_path+'");',function(err,result){
+		console.log(query1.sql);
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -395,12 +460,24 @@ function createAccount (req,res,next) {
 		}
 	});
 
-	query2=connection.query('insert into account (userId,userToken,userName,bioData,imgId) values ('+data.userId+','+data.userToken+','+data.userName+','+data.bioData+',last_insert_id());',function(err,result){
+	query2=connection.query('insert into account (userId,userToken,userName,bioData,imgId) values ('+data.userId+',"'+data.userToken+'","'+data.userName+'","'+data.bioData+'",last_insert_id());',function(err,result){
+		console.log(query2.sql);
 		if(err)
 			console.log("ERROR : "+err);
 		else{
 			console.log("SUCCESS : "+result);
-			console.log(query.sql);
+			console.log(query2.sql);
+			res.send(200,result);
+		}
+	});
+*/
+	query2=connection.query('call createAccount ('+data.userId+',"'+data.userToken+'","'+data.userName+'","'+data.bioData+'","'+target_path+'")',function(err,result){
+		console.log(query2.sql);
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query2.sql);
 			res.send(200,result);
 		}
 	});
@@ -425,7 +502,7 @@ function createTrip (req,res,next) {
 	var ddChars = dd.split('');
 	var datestring = yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
 	
-	query=connection.query('insert into trip (tripname,createdBy,createdDate,occasion,date,duration,meetup) values ('+data.tripName+','+data.userId+',"'+datestring+'",'+data.occasion+','+data.date+','+data.duration+','+data.meetup+');',function(err,result){
+	query=connection.query('insert into trip (tripname,createdBy,createdDate,occasion,date,duration,meetup) values ("'+data.tripName+'","'+data.userId+'","'+datestring+'","'+data.occasion+'","'+data.date+'","'+data.duration+'","'+data.meetup+'");',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -501,22 +578,15 @@ function addFavourites (req,res,next) {
     	
     })
 	res.setHeader('Access-Control-Origin','*');
-	query1=connection.query('insert into images (imgSrc) values ('+target_path+');',function(err,result){
+	query1=connection.query('insert into images (imgSrc) values ("'+target_path+'");insert into favourites (userId,latitude,longitude,description,imgId) values ("'+data.userId+'","'+data.latitude+'","'+data.longitude+'","'+data.description+'",last_insert_id());',function(err,result){
 		console.log(query1.sql);
 		if(err)
 			console.log("ERROR : "+err);
 		else{
 			console.log("SUCCESS : "+result);
-		}
-	});
-	query=connection.query('insert into favourites (userId,latitude,longitude,description,imgId) values ('+data.userId+','+data.latitude+','+data.longitude+','+data.description+',last_insert_id());',function(err,result){
-		console.log(query.sql);
-		if(err)
-			console.log("ERROR : "+err);
-		else{
-			console.log("SUCCESS : "+result);			
 			res.send(200,result);
 		}
 	});
+	
 	
 }
