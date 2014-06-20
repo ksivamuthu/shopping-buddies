@@ -368,6 +368,8 @@ function updateTrip (req,res,next) {
 	data.duration=req.params.duration;
 	data.meetup=req.params.meetup;
 	data.friends=req.params.friends;
+	data.venues=req.params.venues;
+
 	res.setHeader('Access-Control-Origin','*');
 	query=connection.query('update trip set tripName="'+data.tripName+'", occasion="'+data.occasion+'", date="'+data.date+'", duration="'+data.duration+'", meetup="'+data.meetup+'" where tripId='+data.tripId,function(err,result){
 		if(err)
@@ -379,6 +381,7 @@ function updateTrip (req,res,next) {
 		}
 
 	});
+
 	var i=0;
 	while(data.friends[i])
 	{
@@ -392,6 +395,30 @@ function updateTrip (req,res,next) {
 		}
 	});
 	i=i+1;
+	}
+	query1=connection.query('delete from tripVenues where tripId='+data.tripId+';',function(err,result){
+		console.log(query1.sql);
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query1.sql);
+			res.send(200,result);
+		}
+	});
+	var j=0;
+	while(data.venues[j])
+	{
+	query=connection.query('insert into tripVenues (tripId,name,address,latitude,longitude) values ('+data.tripId+', "'+data.venues[j].tripName+'" ,"'+data.venues[j].address+'",'+data.venues[j].latitude+','+data.venues[j].longitude+')',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	j=j+1;
 	}
 }
 function getVenues (req,res,next) {
@@ -508,6 +535,7 @@ function createTrip (req,res,next) {
 	data.duration=req.params.duration;
 	data.meetup=req.params.meetup;
 	data.friends=req.params.friends;
+	data.venues=req.params.venues;
 	res.setHeader('Access-Control-Origin','*');
 	var date=new Date();
 
@@ -542,6 +570,25 @@ function createTrip (req,res,next) {
 	});
 	i=i+1;
 	}
+	var j=0;
+	//var v=JSON.stringify(data.venues);
+	console.log(data.venues[0].tripName);
+	while(data.venues[j])
+	{
+		//var v=JSON.stringify(ven[j]);
+		//console.log(v);
+	query=connection.query('insert into tripVenues (tripId,name,address,latitude,longitude) values (last_insert_id(), "'+data.venues[j].tripName+'" ,"'+data.venues[j].address+'",'+data.venues[j].latitude+','+data.venues[j].longitude+');',function(err,result){
+		if(err)
+			console.log("ERROR : "+err);
+		else{
+			console.log("SUCCESS : "+result);
+			console.log(query.sql);
+			res.send(200,result);
+		}
+	});
+	j=j+1;
+	}
+
 }
 function addFriend (req,res,next) {
 	// body...
