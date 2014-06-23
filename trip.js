@@ -10,10 +10,19 @@ var mysql=require('mysql');
 var connection=mysql.createConnection({
 	host	: "localhost",
 	user	: "root",
-	password: "Tra@2014",
+	password: "Sushm@1995",
 	database: "sbtry",    
 	multipleStatements : true
 });
+
+/*var mysql=require('mysql');
+var connection=mysql.createConnection({
+	host	: "localhost",
+	user	: "root",
+	password: "Tra@2014",
+	database: "sbtry",    
+	multipleStatements : true
+});*/
 /*var mysql = require('mysql');
 
 var connection = mysql.createConnection({
