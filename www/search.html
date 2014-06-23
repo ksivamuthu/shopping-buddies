@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>Search</title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" media="screen">
+
+    <!-- IF using Sass (run gulp sass first), then remove the CSS include above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development)-->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+    
+  </head>
+
+  <body ng-app="starter">
+    <ion-pane>
+      <ion-header-bar class="bar bar-header bar-dark">
+        <button="button button-icon icon ion-navicon"></button>
+        <h1 class="title">Search
+        </h1>
+        <button class="button button-positive">Profile</button>
+      </ion-header-bar>
+    	<ion-content class="has-header">
+     		<div class="list list-inset">
+  				<label class="item item-input">
+    				<i class="icon ion-search placeholder-icon"></i>
+    				<form id="search" ng-submit="search();">
+    				<input type="text" ng-model="searchItem" placeholder="Search">
+    				</form>
+  				</label>
+			</div>
+          	<p>
+            	<img src="about:blank" id="show-pic" height="25%" width="25%" align="right">
+          	</p>
+          	<div id="response">
+          	</div>
+    	</ion-content>
+      <ion-footer-bar class="bar-dark">
+        <h1 class="title">Shopping Buddies</h1>
+      </ion-footer-bar>
+    </ion-pane>
+
+  </body>
+</html>

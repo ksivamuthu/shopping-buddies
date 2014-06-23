@@ -1,5 +1,4 @@
 var express = require('express');
 var app = express();
-console.log(__dirname);
-app.use("/", express.static(__dirname));
+app.use("/", express.static("C:/Ionic Projects/fbLogin/www"));
 app.listen(8100); 

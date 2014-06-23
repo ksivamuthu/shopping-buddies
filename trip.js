@@ -65,13 +65,13 @@ server.del("/deleteTrip",deleteTrip);
 
 server.get("/venues",getVenues);
 server.get("/attendingFriends",attendingFriends);
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
+//=======
+//<<<<<<< HEAD
 server.post("/createAccount",createAccount);
 server.post("/createTrip",createTrip);
->>>>>>> 95778a9345a2a4326aed9cd4bc1189f0a7217471
+//>>>>>>> 95778a9345a2a4326aed9cd4bc1189f0a7217471
 server.post("/addFriend",addFriend);
 server.put("/acceptFriend",acceptFriend);
 server.get("/friends",getFriends);
@@ -79,8 +79,8 @@ server.get("/friends",getFriends);
 //server.put("/updateProfilePic",updateProfilePic);
 //server.post("/uploadProfilePic",uploadProfilePic);
 
-=======
->>>>>>> a23c072ba459c442d6249170de5571de66788a28
+//=======
+//>>>>>>> a23c072ba459c442d6249170de5571de66788a28
 
 function getTrip (req,res,next) {
 	// body...
@@ -683,12 +683,12 @@ function addFavourites (req,res,next) {
 		}
 	});
 	
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	
-=======
-=======
+//=======
+//=======
 	console.log(query.sql);
 	res.send(200);
->>>>>>> a23c072ba459c442d6249170de5571de66788a28
->>>>>>> 95778a9345a2a4326aed9cd4bc1189f0a7217471
+//>>>>>>> a23c072ba459c442d6249170de5571de66788a28
+//>>>>>>> 95778a9345a2a4326aed9cd4bc1189f0a7217471
 }
