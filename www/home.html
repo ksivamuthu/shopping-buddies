@@ -20,10 +20,11 @@
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
+    <script src="js/homePageController.js"></script>
     
   </head>
 
-  <body ng-app="starter">
+  <body ng-app="starter" ng-controller="homePageController">
     <ion-pane>
       <ion-header-bar class="bar bar-header bar-dark">
         <button="button button-icon icon ion-navicon"></button>
@@ -66,7 +67,7 @@
               <h2>Friends</h2>
               <p>Checkout your friends</p>
           </div>
-          <div class="item item-image">
+          <div class="item item-image" ng-click="friends();">
             <img src="images/shoppingFriends.jpg"><!--shopping buddies trip icon-->
           </div>
         </div>

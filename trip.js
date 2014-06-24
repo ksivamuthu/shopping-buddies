@@ -6,14 +6,7 @@ var server=restify.createServer({
 	name:"sbapp"
 });
 
-var mysql=require('mysql');
-var connection=mysql.createConnection({
-	host	: "localhost",
-	user	: "root",
-	password: "Sushm@1995",
-	database: "sbtry",    
-	multipleStatements : true
-});
+
 
 /*var mysql=require('mysql');
 var connection=mysql.createConnection({
@@ -23,7 +16,7 @@ var connection=mysql.createConnection({
 	database: "sbtry",    
 	multipleStatements : true
 });*/
-/*var mysql = require('mysql');
+var mysql = require('mysql');
 
 var connection = mysql.createConnection({
 host :  "nodejs-shoppingbuddies.rhcloud.com",
@@ -31,7 +24,7 @@ user : 	"adminSt5sHZB",
 pass : 	"k_RyfcHqwsdC",
 port : 	3306,
 database : 'shoppingbuddies'
-});*/
+});
 connection.connect(function(err){
 	if(err)
 		console.log("ERROR : "+err);
@@ -191,7 +184,7 @@ function deleteProfile (req,res,next) {
 			res.send(200,result);
 		}
 	});
-	query3=connection.query('delete tripAttendees from tripAttendees , trip where trip.tripId=tripAttendees.tripId and trip.createdBy='+data.userId+';',function(err,result){
+	query3=connection.query('delete tripattendees from tripattendees , trip where trip.tripId=tripattendees.tripId and trip.createdBy='+data.userId+';',function(err,result){
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query3.sql);
@@ -201,7 +194,7 @@ function deleteProfile (req,res,next) {
 			res.send(200,result);
 		}
 	});
-	query7=connection.query('delete tripVenues from tripVenues , trip where trip.tripId=tripVenues.tripId and trip.createdBy='+data.userId+';',function(err,result){
+	query7=connection.query('delete tripvenues from tripvenues , trip where trip.tripId=tripvenues.tripId and trip.createdBy='+data.userId+';',function(err,result){
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query3.sql);
@@ -212,7 +205,7 @@ function deleteProfile (req,res,next) {
 		}
 	});
 
-	query6=connection.query('delete from tripAttendees where invitees='+data.userId+';',function(err,result){
+	query6=connection.query('delete from tripattendees where invitees='+data.userId+';',function(err,result){
 		if(err){
 			console.log("ERROR : "+err);
 			console.log(query3.sql);
@@ -341,7 +334,7 @@ function deleteTrip (req,res,next) {
 	console.log(req.params.tripId);
 	data.tripId=req.params.tripId;
 	res.setHeader('Access-Control-Origin','*');
-	query1=connection.query('delete tripAttendees from tripAttendees , trip where trip.tripId='+data.tripId,function(err,result){
+	query1=connection.query('delete from tripattendees where tripId='+data.tripId,function(err,result){
 		console.log(query1.sql);
 		if(err)
 			console.log("ERROR : "+err);
@@ -351,7 +344,7 @@ function deleteTrip (req,res,next) {
 			res.send(200,result);
 		}
 	});
-	query2=connection.query('delete tripVenues from tripVenues , trip where trip.tripId='+data.tripId,function(err,result){
+	query2=connection.query('delete from tripvenues where tripId='+data.tripId,function(err,result){
 		console.log(query2.sql);
 		if(err)
 			console.log("ERROR : "+err);
@@ -402,7 +395,7 @@ function updateTrip (req,res,next) {
 	var i=0;
 	while(data.friends[i])
 	{
-	query=connection.query('insert into tripAttendees (tripId,invitees,status) select '+data.tripId+', '+data.friends[i]+' ,"No" from dual where not exists (select invitees from tripattendees where tripId='+data.tripId+' and invitees='+data.friends[i]+');',function(err,result){
+	query=connection.query('insert into tripattendees (tripId,invitees,status) select '+data.tripId+', '+data.friends[i]+' ,"No" from dual where not exists (select invitees from tripattendees where tripId='+data.tripId+' and invitees='+data.friends[i]+');',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -413,7 +406,7 @@ function updateTrip (req,res,next) {
 	});
 	i=i+1;
 	}
-	query1=connection.query('delete from tripVenues where tripId='+data.tripId+';',function(err,result){
+	query1=connection.query('delete from tripvenues where tripId='+data.tripId+';',function(err,result){
 		console.log(query1.sql);
 		if(err)
 			console.log("ERROR : "+err);
@@ -426,7 +419,7 @@ function updateTrip (req,res,next) {
 	var j=0;
 	while(data.venues[j])
 	{
-	query=connection.query('insert into tripVenues (tripId,name,address,latitude,longitude) values ('+data.tripId+', "'+data.venues[j].tripName+'" ,"'+data.venues[j].address+'",'+data.venues[j].latitude+','+data.venues[j].longitude+')',function(err,result){
+	query=connection.query('insert into tripvenues (tripId,name,address,latitude,longitude) values ('+data.tripId+', "'+data.venues[j].tripName+'" ,"'+data.venues[j].address+'",'+data.venues[j].latitude+','+data.venues[j].longitude+')',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -577,7 +570,7 @@ function createTrip (req,res,next) {
 	var i=0;
 	while(data.friends[i])
 	{
-	query=connection.query('insert into tripAttendees (tripId,invitees,status) values (last_insert_id(),'+data.friends[i]+',"No");',function(err,result){
+	query=connection.query('insert into tripattendees (tripId,invitees,status) values (last_insert_id(),'+data.friends[i]+',"No");',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{
@@ -590,12 +583,12 @@ function createTrip (req,res,next) {
 	}
 	var j=0;
 	//var v=JSON.stringify(data.venues);
-	console.log(data.venues[0].tripName);
+	console.log(data.venues[0]);
 	while(data.venues[j])
 	{
 		//var v=JSON.stringify(ven[j]);
 		//console.log(v);
-	query=connection.query('insert into tripVenues (tripId,name,address,latitude,longitude) values (last_insert_id(), "'+data.venues[j].tripName+'" ,"'+data.venues[j].address+'",'+data.venues[j].latitude+','+data.venues[j].longitude+');',function(err,result){
+	query=connection.query('insert into tripvenues (tripId,name,address,latitude,longitude) values (last_insert_id(), "'+data.venues[j].tripName+'" ,"'+data.venues[j].address+'",'+data.venues[j].latitude+','+data.venues[j].longitude+');',function(err,result){
 		if(err)
 			console.log("ERROR : "+err);
 		else{

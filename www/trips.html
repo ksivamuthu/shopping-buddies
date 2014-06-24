@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>Trips</title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" media="screen">
+
+    <!-- IF using Sass (run gulp sass first), then remove the CSS include above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development)-->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+    <script src="js/tripController.js"></script>
+  </head>
+
+  <body ng-app="trips" ng-controller="tripController">
+    <ion-pane>
+      <ion-header-bar class="bar bar-header bar-dark">
+        <button="button button-icon icon ion-navicon"></button>
+        <h1 class="title">Trips
+        </h1>
+        <button class="button button-positive">Profile</button>
+      </ion-header-bar>
+    	<ion-content class="has-header">
+        <div id="response">
+          <div class="list card" ng-repeat="trip in trips">
+            <div class="item item-avatar">
+              <img src="images/default.jpg">
+              <h1>{{trip.tripName}}</h1>
+              <p>Created By : {{trip.createdBy}}<p>
+              <p>Created On : {{trip.createdDate}}</p>
+              <p>Occasion : {{trip.occasion}}</p>
+              <p>Date : {{trip.date}}</p>
+              <p>Trip Duration : {{trip.duration}}</p>
+              <p>Meetup place and time : {{trip.meetup}}</p>
+            </div>
+            <div class="item item-body">
+              <div class="list">
+                <div class="item item-divider">
+                  Venues
+                </div>
+                  <a class="item" href="#" ng-repeat="venue in venues">
+                    {{venue.name}}
+                  </a>
+              </div>
+              <div class="row">
+              <div class="col">
+              <h2>Friends</h2>
+              </div>
+              <div class="col">
+              <h2>Status</h2>
+              </div>
+              </div>
+              <div class="row" ng-repeat="friend in friends">
+                <div class="col">
+                  {{friend.invitees}}
+                </div>
+                <div class="col">
+                  {{friend.status}}
+                </div>
+              </div>
+            </div>
+          </div>
+       	</div>
+    	</ion-content>
+      <ion-footer-bar class="bar-dark">
+        <h1 class="title">Shopping Buddies</h1>
+      </ion-footer-bar>
+    </ion-pane>
+
+  </body>
+</html>
