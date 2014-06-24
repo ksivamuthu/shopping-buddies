@@ -32,7 +32,9 @@
         <button class="button button-positive">Profile</button>
       </ion-header-bar>
     	<ion-content class="has-header">
-        <div class="list card">
+      <div class="row">
+      <div class="col">
+        <div class="card">
           <div class="item item-avatar">
             <img src="images/default.jpg"><!--profile pic-->
               <h2>Trips</h2>
@@ -41,8 +43,10 @@
           <div class="item item-image" ng-click="trips();">
             <img src="images/shoppingBags.jpg"><!--shopping buddies trip icon-->
           </div>
-        </div>        
-        <div class="list card">
+        </div>
+      </div>
+      <div class="col">     
+        <div class="card">
           <div class="item item-avatar">
             <img src="images/default.jpg"><!--profile pic-->
               <h2>New Trip</h2>
@@ -51,7 +55,11 @@
           <div class="item item-image" ng-click="newTrips();">
             <img src="images/newTrip.jpg"><!--shopping buddies trip icon-->
           </div>
-        </div>     
+        </div>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col">        
         <div class="list card">
           <div class="item item-avatar">
             <img src="images/default.jpg"><!--profile pic-->
@@ -62,6 +70,8 @@
             <img src="images/shoppingFriends.jpg"><!--shopping buddies trip icon-->
           </div>
         </div>
+        </div>
+        <div class="col">
         <div class="list card">
           <div class="item item-avatar">
             <img src="images/default.jpg"><!--profile pic-->
@@ -72,6 +82,10 @@
             <img src="images/shoppingFavourites.jpg"><!--shopping buddies trip icon-->
           </div>
         </div>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col">
         <div class="list card">
           <div class="item item-avatar">
             <img src="images/default.jpg"><!--profile pic-->
@@ -82,6 +96,8 @@
             <img src="images/whatsHot.jpg"><!--shopping buddies trip icon-->
           </div>
         </div>
+        </div>
+        <div class="col">
         <div class="list card">
           <div class="item item-avatar">
             <img src="images/default.jpg"><!--profile pic-->
@@ -91,6 +107,8 @@
           <div class="item item-image" ng-click="search();">
             <img src="images/search.jpg"><!--shopping buddies trip icon-->
           </div>
+        </div>
+        </div>
         </div>
     	</ion-content>
       <ion-footer-bar class="bar-dark">
