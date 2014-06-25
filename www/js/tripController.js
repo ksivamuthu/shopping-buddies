@@ -6,6 +6,9 @@ console.log("HI! You requested trips");
 var url="http://localhost:4243/trips";
 		
 		var i=0;
+		var j=0;
+		window.localStorage.setItem('userId',2);
+
 
 		$http({method: 'GET', url:url, params:{"userId":window.localStorage['userId']}}).
 		success(function(data,status,headers,config){
@@ -21,8 +24,8 @@ var url="http://localhost:4243/trips";
 			$http({method: 'GET', url:"http://localhost:4243/venues", params:{"tripId":$scope.trips[i].tripId}}).
 			success(function(data,status,headers,config){
 			console.log("SUCCESS : "+JSON.stringify(data));
-			$scope.venues=data;
-			console.log(JSON.stringify($scope.venues));
+			$scope.trips.venues=data;
+			console.log(JSON.stringify($scope.trips.venues));
 			
 		}).error(function(data,status,headers,config){
 			console.log("ERROR : "+JSON.stringify(data));
@@ -30,14 +33,14 @@ var url="http://localhost:4243/trips";
 
 		i=i+1;
 		}	
-		var j=0;	
+			
 			while($scope.trips[j])
 		{
 			$http({method: 'GET', url:"http://localhost:4243/attendingFriends", params:{"tripId":$scope.trips[j].tripId}}).
 			success(function(data,status,headers,config){
 			console.log("SUCCESS : "+JSON.stringify(data));
-			$scope.friends=data;
-			console.log(JSON.stringify($scope.friends));
+			$scope.trips.friends=data;
+			console.log(JSON.stringify($scope.trips.friends));
 			
 		}).error(function(data,status,headers,config){
 			console.log("ERROR : "+JSON.stringify(data));

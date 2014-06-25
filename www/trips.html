@@ -49,7 +49,7 @@
                 <div class="item item-divider">
                   Venues
                 </div>
-                  <a class="item" href="#" ng-repeat="venue in venues">
+                  <a class="item" href="#" ng-repeat="venue in trips.venues">
                     {{venue.name}}
                   </a>
               </div>
@@ -61,7 +61,7 @@
               <h2>Status</h2>
               </div>
               </div>
-              <div class="row" ng-repeat="friend in friends">
+              <div class="row" ng-repeat="friend in trips.friends">
                 <div class="col">
                   {{friend.invitees}}
                 </div>

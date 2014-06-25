@@ -20,35 +20,37 @@
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
-    
+    <script src="js/newTripController.js"></script>
   </head>
 
-  <body ng-app="starter">
+  <body ng-app="newTrip" ng-controller="newTripController">
     <ion-pane>
-      <ion-header-bar class="bar-royal">
+      <ion-header-bar class="bar bar-header bar-dark">
         <button="button button-icon icon ion-navicon"></button>
-        <h1 class="title">New Shopping Trip!</h1>
+        <h1 class="title">New Shopping Trip!
+        </h1>
         <button class="button button-positive">Profile</button>
       </ion-header-bar>
      <ion-content class="has-header">
+     <form>
         <label class="item item-input">
-          <input type="text" placeholder="Event Name">
+          <input type="text" placeholder="Event Name" ng-model="trip.tripName">
         </label>
         <label class="item item-input">
-          <input type="text" placeholder="Occasion">
+          <input type="text" placeholder="Occasion" ng-model="trip.occasion">
         </label>
         <label class="item item-input">
-          <input type="text" placeholder="Venue">
+          <input type="text" placeholder="Venue" ng-model="trip.venues" value="a">
         </label>
         <label class="item item-input">
-          <input type="date" placeholder="Date">
+          <input type="date" placeholder="Date" ng-model="trip.date" value="a">
         </label>
         <div class="list">
           <label class="item item-input item-select">
             <div class="input-label">
               Duration
             </div>
-            <select>
+            <select ng-model="trip.duration" value="a">
               <option value="half an hour">Half an hour</option>
               <option value="one hour">One hour</option>
               <option value="few hours">A few hours</option>
@@ -57,22 +59,23 @@
           </label>
         </div>
         <label class="item item-input">
-          <input type="text" placeholder="Meet up @?">
+          <input type="text" placeholder="Meet up @?" value="a" ng-model="trip.meetup">
         </label>
         <div class="list">
           <label class="item item-input item-select">
             <div class="input-label">
               Invite List
             </div>
-            <select>
+            <select ng-model="trip.friends" values="a">
               <option>{{friend.name}}</option>    <!--from the DB-->
             <select>
           </label>
         </div>
-          
+        <button type="submit" class="button button-positive" ng-click="create(trip);">Create</button> 
+        </form>       
       </ion-content>
-      <ion-footer-bar class="bar-royal">
-        <h1 class="title">developed by Jayti</h1>
+      <ion-footer-bar class="bar bar-footer bar-dark">
+        <h1 class="title">Shopping Buddies</h1>
       </ion-footer-bar>
     </ion-pane>
   </body>
