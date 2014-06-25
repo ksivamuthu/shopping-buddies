@@ -6,8 +6,8 @@ angular.module('starter', ['ionic'])
 	window.localStorage.setItem('userId',2);
 
 	$scope.trips=function(){
-		//var path="file:///home/sushmakodati/Documents/cei/ShoppingBuddies/www/trips.html"
-		$window.location.href='http://localhost:8000/trips.html';
+		
+		$window.location.href='http://localhost:8100/trips.html';
 	}
 
 	$scope.newTrips=function(){
