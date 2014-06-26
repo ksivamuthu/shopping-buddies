@@ -5,14 +5,10 @@ angular.module('starter', ['ionic'])
 	
 	window.localStorage.setItem('userId',2);
 
-<<<<<<< HEAD
-=======
 	$scope.trips=function(){
 		
 		$window.location.href='http://localhost:8100/trips.html';
 	}
-
->>>>>>> 565018cc4b213b4437a7da2e77d33740c85415e9
 	$scope.newTrips=function(){
 		var url="http://localhost:4243/createTrips";
 		$http({method: 'POST', url:url, params:{"userId":window.localStorage['userId']}}).

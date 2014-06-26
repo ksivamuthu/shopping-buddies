@@ -16,7 +16,7 @@ var connection=mysql.createConnection({
 	database: "sbtry",    
 	multipleStatements : true
 });*/
-var mysql = require('mysql');
+/*var mysql = require('mysql');
 
 var connection = mysql.createConnection({
 host :  "nodejs-shoppingbuddies.rhcloud.com",
@@ -25,7 +25,7 @@ pass : 	"k_RyfcHqwsdC",
 port : 	3306,
 database : 'shoppingbuddies'
 });
-/*
+*/
 var mysql=require('mysql');
 var connection=mysql.createConnection({
 	host	: "localhost",
@@ -33,7 +33,7 @@ var connection=mysql.createConnection({
 	password: "Sushm@1995",
 	database: "sbtry",    
 	multipleStatements : true
-});*/
+});
 connection.connect(function(err){
 	if(err)
 		console.log("ERROR : "+err);
