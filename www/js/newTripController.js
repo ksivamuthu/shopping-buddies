@@ -11,6 +11,8 @@ angular.module('newTrip', ['ionic'])
 		$http({method: 'POST', url:url, params:{"userId":window.localStorage['userId']},data:{"tripName":trip.tripName,"occasion":trip.occasion,"duration":trip.duration,"meetup":trip.meetup,"friends":"","venues":"","date":trip.date}}).
 		success(function(data,status,headers,config){
 			console.log("SUCCESS : "+JSON.stringify(data));
+			$window.alert("Trip Created!")
+			$window.location.href="./home.html"
 
 		}).
 		error(function(data,status,headers,config){
