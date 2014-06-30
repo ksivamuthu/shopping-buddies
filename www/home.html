@@ -25,6 +25,8 @@
   </head>
 
   <body ng-app="starter" ng-controller="homePageController">
+  <ion-side-menus>
+  <ion-side-menu-content>
     <ion-pane>
       <ion-header-bar class="bar bar-header bar-dark">
         <button="button button-icon icon ion-navicon"></button>
@@ -120,6 +122,50 @@
         <h1 class="title">Shopping Buddies</h1>
       </ion-footer-bar>
     </ion-pane>
-
+    </ion-side-menu-content>
+    <ion-side-menu side="left">
+    <ion-header-bar class="bar bar-header bar-dark">
+    <button class="button button-icon">
+      <i class="icon icon-navicon"></i>
+    </button>
+      <h1 class="title">Menu</h1>
+    </ion-header-bar>
+      <ion-content scroll="true">
+      <ion-list>
+        <ion-item>
+          <a href="">
+          <img src="images/default.jpg"></img><br>
+          Profile</a>
+        </ion-item>
+        <ion-item>
+          <a href="./home.html" class="item item-thumbnail-left">
+          <img src="images/ShoppingBuddies.jpg">Home</a>
+        </ion-item>
+        <ion-item>
+          <a href="./trips.html" class="item item-thumbnail-left">
+          <img src="images/shoppingBags.jpg">Trips</a>
+        </ion-item>
+        <ion-item> 
+          <a href="./newTrip.html" class="item item-thumbnail-left">
+          <img src="images/newTrip.jpg">New Trip</a>
+        </ion-item>
+        <ion-item>
+          <a href="./myFav.html" class="item item-thumbnail-left"><img src="images/shoppingFavourites.jpg">Favourites</a>
+        </ion-item>
+        <ion-item>
+          <a href="./search.html" class="item item-thumbnail-left">
+          <img src="images/search.jpg">Search</a>
+        </ion-item>
+        <ion-item>
+          <a href="./whatsHot.html" class="item item-thumbnail-left">
+          <img src="images/whatsHot.jpg">What's Hot!</a>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+    <ion-footer-bar class="bar-dark">
+        <h1 class="title">Shopping Buddies</h1>
+      </ion-footer-bar>
+    </ion-side-menu>
+    </ion-side-menus>
   </body>
 </html>

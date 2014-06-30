@@ -81,25 +81,41 @@
     </button>
       <h1 class="title">Menu</h1>
     </ion-header-bar>
-      <ion-content scroll="false">
+      <ion-content scroll="true">
       <ion-list>
         <ion-item>
-          <a href="./home.html">Home</a>
+          <a href="">
+          <img src="images/default.jpg"></img><br>
+          Profile</a>
         </ion-item>
         <ion-item>
-          <a href="./trips.html">Trips</a>
+          <a href="./home.html" class="item item-thumbnail-left">
+          <img src="images/ShoppingBuddies.jpg">Home</a>
+        </ion-item>
+        <ion-item>
+          <a href="./trips.html" class="item item-thumbnail-left">
+          <img src="images/shoppingBags.jpg">Trips</a>
         </ion-item>
         <ion-item> 
-          <a href="./newTrip.html">New Trip</a>
+          <a href="./newTrip.html" class="item item-thumbnail-left">
+          <img src="images/newTrip.jpg">New Trip</a>
         </ion-item>
         <ion-item>
-          <a href="./myFav.html">Favourites</a>
+          <a href="./myFav.html" class="item item-thumbnail-left"><img src="images/shoppingFavourites.jpg">Favourites</a>
         </ion-item>
         <ion-item>
-          <a href="./search.html">Search</a>
+          <a href="./search.html" class="item item-thumbnail-left">
+          <img src="images/search.jpg">Search</a>
+        </ion-item>
+        <ion-item>
+          <a href="./whatsHot.html" class="item item-thumbnail-left">
+          <img src="images/whatsHot.jpg">What's Hot!</a>
         </ion-item>
       </ion-list>
     </ion-content>
+    <ion-footer-bar class="bar-dark">
+        <h1 class="title">Shopping Buddies</h1>
+      </ion-footer-bar>
     </ion-side-menu>
     </ion-side-menus>
   </body>
