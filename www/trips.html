@@ -24,6 +24,8 @@
   </head>
 
   <body ng-app="trips" ng-controller="tripController">
+  <ion-side-menus>
+  <ion-side-menu-content>
     <ion-pane>
       <ion-header-bar class="bar bar-header bar-dark">
         <button="button button-icon icon ion-navicon"></button>
@@ -71,6 +73,34 @@
         <h1 class="title">Shopping Buddies</h1>
       </ion-footer-bar>
     </ion-pane>
-
+    </ion-side-menu-content>
+    <ion-side-menu side="left">
+    <ion-header-bar class="bar bar-header bar-dark">
+    <button class="button button-icon">
+      <i class="icon icon-navicon"></i>
+    </button>
+      <h1 class="title">Menu</h1>
+    </ion-header-bar>
+      <ion-content scroll="false">
+      <ion-list>
+        <ion-item>
+          <a href="./home.html">Home</a>
+        </ion-item>
+        <ion-item>
+          <a href="./trips.html">Trips</a>
+        </ion-item>
+        <ion-item> 
+          <a href="./newTrip.html">New Trip</a>
+        </ion-item>
+        <ion-item>
+          <a href="./myFav.html">Favourites</a>
+        </ion-item>
+        <ion-item>
+          <a href="./search.html">Search</a>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+    </ion-side-menu>
+    </ion-side-menus>
   </body>
 </html>
